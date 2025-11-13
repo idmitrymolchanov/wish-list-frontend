@@ -20,6 +20,7 @@ import type {
   GetItems200Response,
   Item,
   ItemUpdate,
+  SortField,
 } from '../models/index';
 import {
     CommonFaultFromJSON,
@@ -32,6 +33,8 @@ import {
     ItemToJSON,
     ItemUpdateFromJSON,
     ItemUpdateToJSON,
+    SortFieldFromJSON,
+    SortFieldToJSON,
 } from '../models/index';
 
 export interface CreateItemRequest {
@@ -49,6 +52,7 @@ export interface GetItemsRequest {
     limit?: number;
     offset?: number;
     showReservedStatus?: boolean;
+    sortField?: SortField;
 }
 
 export interface PatchItemRequest {
@@ -57,10 +61,12 @@ export interface PatchItemRequest {
 }
 
 export interface ReserveItemRequest {
+    id: string;
     reserved: boolean;
 }
 
 export interface SetItemStatusRequest {
+    id: string;
     statusCode?: string;
 }
 
@@ -187,6 +193,10 @@ export class ItemsApi extends runtime.BaseAPI {
             queryParameters['showReservedStatus'] = requestParameters['showReservedStatus'];
         }
 
+        if (requestParameters['sortField'] != null) {
+            queryParameters['sortField'] = requestParameters['sortField'];
+        }
+
         const headerParameters: runtime.HTTPHeaders = {};
 
         if (this.configuration && this.configuration.accessToken) {
@@ -279,6 +289,13 @@ export class ItemsApi extends runtime.BaseAPI {
      * Изменить статус резерва
      */
     async reserveItemRaw(requestParameters: ReserveItemRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling reserveItem().'
+            );
+        }
+
         if (requestParameters['reserved'] == null) {
             throw new runtime.RequiredError(
                 'reserved',
@@ -303,7 +320,8 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/reserve`;
+        let urlPath = `/wishlist/{id}/reserve`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
             path: urlPath,
@@ -326,6 +344,13 @@ export class ItemsApi extends runtime.BaseAPI {
      * Обновить статус предмета
      */
     async setItemStatusRaw(requestParameters: SetItemStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling setItemStatus().'
+            );
+        }
+
         const queryParameters: any = {};
 
         if (requestParameters['statusCode'] != null) {
@@ -343,7 +368,8 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/status`;
+        let urlPath = `/wishlist/{id}/status`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
             path: urlPath,
@@ -358,7 +384,7 @@ export class ItemsApi extends runtime.BaseAPI {
     /**
      * Обновить статус предмета
      */
-    async setItemStatus(requestParameters: SetItemStatusRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+    async setItemStatus(requestParameters: SetItemStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.setItemStatusRaw(requestParameters, initOverrides);
     }
 

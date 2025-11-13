@@ -1,37 +1,21 @@
 
-# ItemBaseInfo
+# SortField
 
-Базовая информация о предмете
+Статус предмета в вишлисте
 
 ## Properties
 
 Name | Type
 ------------ | -------------
-`id` | string
-`createDate` | Date
-`lastUpdateDate` | Date
-`name` | string
-`amount` | string
-`reserved` | boolean
-`priority` | number
-`priorityName` | string
 
 ## Example
 
 ```typescript
-import type { ItemBaseInfo } from ''
+import type { SortField } from ''
 
 // TODO: Update the object below with actual values
 const example = {
-  "id": null,
-  "createDate": null,
-  "lastUpdateDate": null,
-  "name": null,
-  "amount": null,
-  "reserved": null,
-  "priority": null,
-  "priorityName": null,
-} satisfies ItemBaseInfo
+} satisfies SortField
 
 console.log(example)
 
@@ -40,7 +24,7 @@ const exampleJSON: string = JSON.stringify(example)
 console.log(exampleJSON)
 
 // Parse the JSON string back to an object
-const exampleParsed = JSON.parse(exampleJSON) as ItemBaseInfo
+const exampleParsed = JSON.parse(exampleJSON) as SortField
 console.log(exampleParsed)
 ```
 

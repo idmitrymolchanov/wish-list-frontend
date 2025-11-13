@@ -8,8 +8,8 @@ All URIs are relative to *https://todo/newgor-wishlist*
 | [**getItemById**](ItemsApi.md#getitembyid) | **GET** /wishlist/{id} | Получить предмет вишлиста по id |
 | [**getItems**](ItemsApi.md#getitems) | **GET** /wishlist | Получить список предметов |
 | [**patchItem**](ItemsApi.md#patchitem) | **PATCH** /wishlist/{id} | Обновить предмет |
-| [**reserveItem**](ItemsApi.md#reserveitem) | **POST** /wishlist/reserve | Изменить статус резерва |
-| [**setItemStatus**](ItemsApi.md#setitemstatus) | **POST** /wishlist/status | Обновить статус предмета |
+| [**reserveItem**](ItemsApi.md#reserveitem) | **POST** /wishlist/{id}/reserve | Изменить статус резерва |
+| [**setItemStatus**](ItemsApi.md#setitemstatus) | **POST** /wishlist/{id}/status | Обновить статус предмета |
 
 
 
@@ -162,7 +162,7 @@ example().catch(console.error);
 
 ## getItems
 
-> GetItems200Response getItems(statusCode, createDateFrom, createDateTo, limit, offset, showReservedStatus)
+> GetItems200Response getItems(statusCode, createDateFrom, createDateTo, limit, offset, showReservedStatus, sortField)
 
 Получить список предметов
 
@@ -198,6 +198,8 @@ async function example() {
     offset: 56,
     // boolean | показывать резерв (optional)
     showReservedStatus: true,
+    // SortField | показывать резерв (optional)
+    sortField: ...,
   } satisfies GetItemsRequest;
 
   try {
@@ -223,6 +225,7 @@ example().catch(console.error);
 | **limit** | `number` | Количество записей на странице | [Optional] [Defaults to `50`] |
 | **offset** | `number` | Смещение от начала списка | [Optional] [Defaults to `0`] |
 | **showReservedStatus** | `boolean` | показывать резерв | [Optional] [Defaults to `undefined`] |
+| **sortField** | `SortField` | показывать резерв | [Optional] [Defaults to `undefined`] [Enum: CREATE_DATE, PRIORITY] |
 
 ### Return type
 
@@ -328,7 +331,7 @@ example().catch(console.error);
 
 ## reserveItem
 
-> reserveItem(reserved)
+> reserveItem(id, reserved)
 
 Изменить статус резерва
 
@@ -350,6 +353,8 @@ async function example() {
   const api = new ItemsApi(config);
 
   const body = {
+    // string | Идентификатор предмета
+    id: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
     // boolean | статус резерва
     reserved: true,
   } satisfies ReserveItemRequest;
@@ -371,6 +376,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Идентификатор предмета | [Defaults to `undefined`] |
 | **reserved** | `boolean` | статус резерва | [Defaults to `undefined`] |
 
 ### Return type
@@ -400,7 +406,7 @@ example().catch(console.error);
 
 ## setItemStatus
 
-> setItemStatus(statusCode)
+> setItemStatus(id, statusCode)
 
 Обновить статус предмета
 
@@ -422,6 +428,8 @@ async function example() {
   const api = new ItemsApi(config);
 
   const body = {
+    // string | Идентификатор предмета
+    id: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
     // string | Код статуса (optional)
     statusCode: statusCode_example,
   } satisfies SetItemStatusRequest;
@@ -443,6 +451,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Идентификатор предмета | [Defaults to `undefined`] |
 | **statusCode** | `string` | Код статуса | [Optional] [Defaults to `undefined`] |
 
 ### Return type

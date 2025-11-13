@@ -2,7 +2,7 @@ import type {ItemBaseInfo} from "../api";
 
 interface Props {
     items: ItemBaseInfo[];
-    onItemClick: (id: string) => void; // колбек при клике на элемент
+    onItemClick: (id: string) => void;
 }
 
 export default function ItemList({ items, onItemClick }: Props) {
@@ -21,9 +21,9 @@ export default function ItemList({ items, onItemClick }: Props) {
                         borderRadius: "8px",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "space-between", // чтобы эмодзи было справа
+                        justifyContent: "space-between",
                         cursor: "pointer",
-                        backgroundColor: item.reserved ? "#d9fdd3" : "white", // бледно-салатовый
+                        backgroundColor: item.reserved ? "#d9fdd3" : "white",
                         position: "relative",
                         transition: "background-color 0.2s ease-in-out",
                     }}
@@ -48,6 +48,17 @@ export default function ItemList({ items, onItemClick }: Props) {
                             }}
                         >
                             reserved 💚
+                        </span>
+                    )}
+                    {!item.reserved && (
+                        <span
+                            style={{
+                                fontSize: "1.5rem",
+                                marginLeft: "auto",
+                                opacity: 0.8,
+                            }}
+                        >
+                            {item.priorityName} 💛
                         </span>
                     )}
                 </li>

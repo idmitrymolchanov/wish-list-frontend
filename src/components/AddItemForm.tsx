@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ItemsApi, type Item, ItemStatus } from "../api";
 
 interface Props {
-    onItemAdded: () => void; // вызывается после успешного добавления
+    onItemAdded: () => void;
     api: ItemsApi;
 }
 
@@ -13,7 +13,7 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
         amount: "0.00",
         currency: "RUB",
         linkToSite: "",
-        priority: "0",
+        priority: 0,
         image: ""
     });
 
@@ -54,8 +54,8 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
 
         try {
             await api.createItem({ item });
-            setForm({name: "", description: "", amount: "0.00", currency: "RUB", linkToSite: "", priority: "0", image: ""});
-            onItemAdded(); // переход обратно на список
+            setForm({name: "", description: "", amount: "0.00", currency: "RUB", linkToSite: "", priority: 0, image: ""});
+            onItemAdded();
         } catch (err) {
             console.error("Ошибка при добавлении предмета:", err);
             setError("Не удалось добавить предмет. Попробуйте снова.");

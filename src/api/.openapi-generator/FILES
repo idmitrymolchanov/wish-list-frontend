@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/ItemsApi.ts
 apis/index.ts
 docs/CommonFault.md
@@ -9,6 +8,7 @@ docs/ItemBaseInfo.md
 docs/ItemStatus.md
 docs/ItemUpdate.md
 docs/ItemsApi.md
+docs/SortField.md
 index.ts
 models/CommonFault.ts
 models/CreateItem200Response.ts
@@ -17,5 +17,6 @@ models/Item.ts
 models/ItemBaseInfo.ts
 models/ItemStatus.ts
 models/ItemUpdate.ts
+models/SortField.ts
 models/index.ts
 runtime.ts

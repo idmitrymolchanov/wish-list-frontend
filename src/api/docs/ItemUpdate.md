@@ -12,10 +12,11 @@ Name | Type
 `name` | string
 `amount` | string
 `reserved` | boolean
+`priority` | string
+`priorityName` | string
 `currency` | string
 `description` | string
 `linkToSite` | string
-`priority` | string
 `image` | string
 
 ## Example
@@ -31,10 +32,11 @@ const example = {
   "name": null,
   "amount": null,
   "reserved": null,
+  "priority": null,
+  "priorityName": null,
   "currency": null,
   "description": null,
   "linkToSite": null,
-  "priority": null,
   "image": null,
 } satisfies ItemUpdate
 

@@ -56,6 +56,18 @@ export interface ItemUpdate {
      */
     reserved?: boolean;
     /**
+     * приоритет
+     * @type {string}
+     * @memberof ItemUpdate
+     */
+    priority?: string;
+    /**
+     * наименование приоритета
+     * @type {string}
+     * @memberof ItemUpdate
+     */
+    priorityName?: string;
+    /**
      * валюта
      * @type {string}
      * @memberof ItemUpdate
@@ -73,12 +85,6 @@ export interface ItemUpdate {
      * @memberof ItemUpdate
      */
     linkToSite?: string;
-    /**
-     * приоритет
-     * @type {string}
-     * @memberof ItemUpdate
-     */
-    priority?: string;
     /**
      * изображение предмета
      * @type {string}
@@ -110,10 +116,11 @@ export function ItemUpdateFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'name': json['name'] == null ? undefined : json['name'],
         'amount': json['amount'] == null ? undefined : json['amount'],
         'reserved': json['reserved'] == null ? undefined : json['reserved'],
+        'priority': json['priority'] == null ? undefined : json['priority'],
+        'priorityName': json['priorityName'] == null ? undefined : json['priorityName'],
         'currency': json['currency'] == null ? undefined : json['currency'],
         'description': json['description'] == null ? undefined : json['description'],
         'linkToSite': json['linkToSite'] == null ? undefined : json['linkToSite'],
-        'priority': json['priority'] == null ? undefined : json['priority'],
         'image': json['image'] == null ? undefined : json['image'],
     };
 }
@@ -135,10 +142,11 @@ export function ItemUpdateToJSONTyped(value?: ItemUpdate | null, ignoreDiscrimin
         'name': value['name'],
         'amount': value['amount'],
         'reserved': value['reserved'],
+        'priority': value['priority'],
+        'priorityName': value['priorityName'],
         'currency': value['currency'],
         'description': value['description'],
         'linkToSite': value['linkToSite'],
-        'priority': value['priority'],
         'image': value['image'],
     };
 }

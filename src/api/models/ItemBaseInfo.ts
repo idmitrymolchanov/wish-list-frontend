@@ -55,6 +55,18 @@ export interface ItemBaseInfo {
      * @memberof ItemBaseInfo
      */
     reserved?: boolean;
+    /**
+     * код приоритета 1-10
+     * @type {number}
+     * @memberof ItemBaseInfo
+     */
+    priority?: number;
+    /**
+     * наименование приоритета
+     * @type {string}
+     * @memberof ItemBaseInfo
+     */
+    priorityName?: string;
 }
 
 /**
@@ -80,6 +92,8 @@ export function ItemBaseInfoFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'name': json['name'] == null ? undefined : json['name'],
         'amount': json['amount'] == null ? undefined : json['amount'],
         'reserved': json['reserved'] == null ? undefined : json['reserved'],
+        'priority': json['priority'] == null ? undefined : json['priority'],
+        'priorityName': json['priorityName'] == null ? undefined : json['priorityName'],
     };
 }
 
@@ -100,6 +114,8 @@ export function ItemBaseInfoToJSONTyped(value?: ItemBaseInfo | null, ignoreDiscr
         'name': value['name'],
         'amount': value['amount'],
         'reserved': value['reserved'],
+        'priority': value['priority'],
+        'priorityName': value['priorityName'],
     };
 }
 

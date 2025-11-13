@@ -7,3 +7,4 @@ export * from './Item';
 export * from './ItemBaseInfo';
 export * from './ItemStatus';
 export * from './ItemUpdate';
+export * from './SortField';

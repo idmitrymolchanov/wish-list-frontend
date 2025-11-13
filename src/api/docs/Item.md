@@ -12,10 +12,11 @@ Name | Type
 `name` | string
 `amount` | string
 `reserved` | boolean
+`priority` | number
+`priorityName` | string
 `currency` | string
 `description` | string
 `linkToSite` | string
-`priority` | string
 `image` | string
 `statusCode` | [ItemStatus](ItemStatus.md)
 `statusName` | string
@@ -33,10 +34,11 @@ const example = {
   "name": null,
   "amount": null,
   "reserved": null,
+  "priority": null,
+  "priorityName": null,
   "currency": null,
   "description": null,
   "linkToSite": null,
-  "priority": null,
   "image": null,
   "statusCode": null,
   "statusName": null,

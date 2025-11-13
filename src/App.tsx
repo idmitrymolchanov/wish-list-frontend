@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { Configuration } from "./api";
 import { ItemsApi } from "./api/apis/ItemsApi";
 import type { GetItems200Response, ItemBaseInfo, Item } from "./api/models";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
+import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
 
 const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
 
 function WishListPage() {
     const [items, setItems] = useState<ItemBaseInfo[]>([]);
+    const [status, setStatus] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    const loadItems = async () => {
+    const loadItems = async (status?: string | null) => {
         try {
-            const response: GetItems200Response = await api.getItems();
+            const response: GetItems200Response = await api.getItems({
+                statusCode: status ?? undefined,
+            });
             setItems(response.list ?? []);
         } catch (err) {
             console.error("Ошибка при загрузке предметов:", err);
@@ -22,8 +26,8 @@ function WishListPage() {
     };
 
     useEffect(() => {
-        void loadItems();
-    }, []);
+        void loadItems(status);
+    }, [status]);
 
     const handleItemClick = (id: number) => {
         navigate(`/item/${id}`);
@@ -32,13 +36,33 @@ function WishListPage() {
     return (
         <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
             <h1>Super Wish List haha</h1>
+
             <button onClick={() => navigate("/add")} style={{ marginBottom: "1rem" }}>
                 Добавить новый предмет
             </button>
+
+            {/* Кнопки фильтрации */}
+            <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+                {["OPEN", "COMPLETED", "CANCELED"].map((s) => (
+                    <button
+                        key={s}
+                        onClick={() => {
+                            setStatus(s);
+                            void loadItems(s);
+                    }}
+                    >
+                        {s === "OPEN" && "Открыто"}
+                        {s === "COMPLETED" && "Завершено"}
+                        {s === "CANCELED" && "Отменено"}
+                    </button>
+                ))}
+            </div>
+
             <ItemList items={items} onItemClick={handleItemClick} />
         </div>
     );
 }
+
 
 function AddItemPage() {
     const navigate = useNavigate();
@@ -58,59 +82,28 @@ function AddItemPage() {
     );
 }
 
-function ItemDetailPage() {
-    const { id } = useParams<{ id: string }>();
-    const [item, setItem] = useState<Item | null>(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (!id) return;
-        const loadItem = async () => {
-            try {
-                const data = await api.getItemById({ id: String(id) });
-                setItem(data);
-            } catch (err) {
-                console.error("Ошибка при загрузке деталей:", err);
-            }
-        };
-        void loadItem();
-    }, [id]);
-
-    if (!item) return <p>Загрузка...</p>;
-
-    return (
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
-            <h1>Детали предмета</h1>
-            {item.image && (
-                <img
-                    src={item.image}
-                    alt={item.name}
-                    style={{ width: "200px", objectFit: "cover", marginBottom: "1rem" }}
-                />
-            )}
-            <p>
-                <strong>{item.name}</strong>
-            </p>
-            <p>{item.description}</p>
-            <p>
-                {item.amount} {item.currency}
-            </p>
-            <p>Статус: {item.statusName}</p>
-            <button onClick={() => navigate(-1)} style={{ marginTop: "1rem" }}>
-                Назад
-            </button>
-        </div>
-    );
-}
-
 export default function App() {
     return (
         <Router>
-            <Routes>
-                <Route path="/" element={<WishListPage />} />
-                <Route path="/add" element={<AddItemPage />} />
-                <Route path="/item/:id" element={<ItemDetailPage />} />
-            </Routes>
+            <div
+                style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    // alignItems: "center",
+                    // marginRight:"25%",
+                    // width: "50%",
+                    // marginLeft: "25%",
+                    // minHeight: "100vh",
+                    paddingTop: "2rem",
+                    // paddingLeft: "150%"
+                }}
+            >
+                <Routes>
+                    <Route path="/" element={<WishListPage/>}/>
+                    <Route path="/add" element={<AddItemPage/>}/>
+                    <Route path="/item/:id" element={<ItemDetailPage/>}/>
+                </Routes>
+            </div>
         </Router>
-    );
+);
 }
