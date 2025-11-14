@@ -21,10 +21,11 @@ export default function LoginForm() {
             });
 
             localStorage.setItem("token", response.data);
+            localStorage.setItem("login", login);
             navigate("/items/" + login);
         } catch (err: any) {
             console.error(err);
-            setError(err.response?.data || "Ошибка при входе");
+            setError(err.response?.code || "Ошибка при входе");
         }
     };
 

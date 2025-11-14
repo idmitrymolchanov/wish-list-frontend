@@ -8,8 +8,7 @@ import ItemList from "./components/ItemList";
 import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
 import RegisterForm from "./components/RegisterForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
-
-// const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
+import ProjectInfoPage from "./components/ProjectInfoPage.tsx";
 
 const token = localStorage.getItem("token") || "";
 
@@ -35,11 +34,9 @@ function WishListPage() {
     const [status, setStatus] = useState<string | null>(null);
     const navigate = useNavigate();
 
-    console.log("+++ cur: " + currentLogin)
-
     const isAuthenticated = Boolean(localStorage.getItem("token"));
 
-    const loadItems = async (status?: string | null) => {
+    const loadItems = async (status?: string | null, loginLocal?: string | null) => {
         try {
             const response: GetItems200Response = await api.getItems({
                 userLogin: currentLogin ?? "undefined",
@@ -50,6 +47,15 @@ function WishListPage() {
             console.error("Ошибка при загрузке предметов:", err);
         }
     };
+
+    useEffect(() => {
+        if (!login){
+            void loadItems(status);
+        }
+        else {
+            void loadItems(status, login);
+        }
+    }, [status, login]);
 
     useEffect(() => {
         void loadItems(status);
@@ -67,15 +73,38 @@ function WishListPage() {
         navigate(`/register`);
     };
 
+    const handleInfoPage = () => {
+        navigate(`/info`);
+    };
+
     return (
         <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
             <h1>Super WishList</h1>
 
             <div style={{display: "flex", justifyContent: "space-between"}}>
-                {isAuthenticated && currentLogin == login && <div><h3>Здарова, {login}!</h3></div>}
+                {isAuthenticated && <div><h3>Здарова, {login}!</h3></div>}
 
-                {isAuthenticated && currentLogin == login && (
-                    <button onClick={handleLogout}>Выйти</button>
+                {isAuthenticated && (
+                    <button onClick={handleLogout} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
+                    >Выйти</button>
+                )}
+            </div>
+
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {(
+                    <button onClick={handleInfoPage} style={{marginBottom: "1rem", backgroundColor: "#d3f6ab"}}
+                    >О проекте</button>
+                )}
+            </div>
+
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {!isAuthenticated && (
+                    <button onClick={handleLogin} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
+                    >Войти</button>
+                )}
+                {!isAuthenticated && (
+                    <button onClick={handleRegistration} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
+                    >Зарегистрироваться</button>
                 )}
             </div>
 
@@ -83,7 +112,7 @@ function WishListPage() {
             {isAuthenticated && currentLogin == login && (
                 <button
                     onClick={() => navigate("/add")}
-                    style={{marginBottom: "1rem"}}
+                    style={{marginBottom: "1rem", backgroundColor: "#d3f6ab"}}
                 >
                     Добавить новый предмет
                 </button>
@@ -107,18 +136,6 @@ function WishListPage() {
             </div>
 
             <ItemList items={items} onItemClick={handleItemClick}/>
-
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                {!isAuthenticated && (
-                    <button onClick={handleLogin}>Войти</button>
-                )}
-            </div>
-
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                {!isAuthenticated && (
-                    <button onClick={handleRegistration}>Зарегистрироваться</button>
-                )}
-            </div>
         </div>
     );
 }
@@ -133,8 +150,8 @@ function AddItemPage() {
     return (
         <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
             <h1>Добавить предмет</h1>
-            <AddItemForm onItemAdded={handleItemAdded} api={api} />
-            <button onClick={() => navigate("/")} style={{ marginTop: "1rem" }}>
+            <AddItemForm onItemAdded={handleItemAdded} api={api}/>
+            <button onClick={() => navigate("/")} style={{marginTop: "1rem"}}>
                 Отмена
             </button>
         </div>
@@ -164,6 +181,7 @@ export default function App() {
                     <Route path="/add" element={<AddItemPage/>}/>
                     <Route path="/item/:id" element={<ItemDetailPage/>}/>
                     <Route path="/items/:currentLogin" element={<WishListPage/>}/>
+                    <Route path="/info" element={<ProjectInfoPage/>}/>
                 </Routes>
             </div>
         </Router>

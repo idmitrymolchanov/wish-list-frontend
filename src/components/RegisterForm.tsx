@@ -50,6 +50,8 @@ export default function RegisterForm() {
                     required
                 />
                 <button type="submit" style={{ padding: "0.5rem 1rem" }}>Зарегистрироваться</button>
+                <h3>НЕ ВВОДИТЕ РЕАЛЬНЫЕ ПАРОЛИ</h3>
+                <h4>ключ шифрования пока не спрятан</h4>
             </form>
         </div>
     );
