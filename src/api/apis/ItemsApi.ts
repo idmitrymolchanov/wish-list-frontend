@@ -46,6 +46,7 @@ export interface GetItemByIdRequest {
 }
 
 export interface GetItemsRequest {
+    userLogin: string;
     statusCode?: string;
     createDateFrom?: Date;
     createDateTo?: Date;
@@ -167,7 +168,18 @@ export class ItemsApi extends runtime.BaseAPI {
      * Получить список предметов
      */
     async getItemsRaw(requestParameters: GetItemsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<GetItems200Response>> {
+        if (requestParameters['userLogin'] == null) {
+            throw new runtime.RequiredError(
+                'userLogin',
+                'Required parameter "userLogin" was null or undefined when calling getItems().'
+            );
+        }
+
         const queryParameters: any = {};
+
+        if (requestParameters['userLogin'] != null) {
+            queryParameters['userLogin'] = requestParameters['userLogin'];
+        }
 
         if (requestParameters['statusCode'] != null) {
             queryParameters['statusCode'] = requestParameters['statusCode'];
@@ -224,7 +236,7 @@ export class ItemsApi extends runtime.BaseAPI {
      * Метод позволяет получить список предметов вишлиста по заданным параметрам запроса. Если по заданным параметрам предметы не найдены, то возвращается пустой массив.
      * Получить список предметов
      */
-    async getItems(requestParameters: GetItemsRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetItems200Response> {
+    async getItems(requestParameters: GetItemsRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<GetItems200Response> {
         const response = await this.getItemsRaw(requestParameters, initOverrides);
         return await response.value();
     }

@@ -20,6 +20,7 @@ Name | Type
 `image` | string
 `statusCode` | [ItemStatus](ItemStatus.md)
 `statusName` | string
+`userLogin` | string
 
 ## Example
 
@@ -42,6 +43,7 @@ const example = {
   "image": null,
   "statusCode": null,
   "statusName": null,
+  "userLogin": null,
 } satisfies Item
 
 console.log(example)

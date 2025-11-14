@@ -111,6 +111,12 @@ export interface Item {
      * @memberof Item
      */
     statusName?: string;
+    /**
+     * логин пользователя
+     * @type {string}
+     * @memberof Item
+     */
+    userLogin?: string;
 }
 
 
@@ -147,6 +153,7 @@ export function ItemFromJSONTyped(json: any, ignoreDiscriminator: boolean): Item
         'image': json['image'] == null ? undefined : json['image'],
         'statusCode': json['statusCode'] == null ? undefined : ItemStatusFromJSON(json['statusCode']),
         'statusName': json['statusName'] == null ? undefined : json['statusName'],
+        'userLogin': json['userLogin'] == null ? undefined : json['userLogin'],
     };
 }
 
@@ -175,6 +182,7 @@ export function ItemToJSONTyped(value?: Item | null, ignoreDiscriminator: boolea
         'image': value['image'],
         'statusCode': ItemStatusToJSON(value['statusCode']),
         'statusName': value['statusName'],
+        'userLogin': value['userLogin'],
     };
 }
 

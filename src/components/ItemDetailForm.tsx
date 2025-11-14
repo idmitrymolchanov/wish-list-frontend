@@ -4,6 +4,9 @@ import { Configuration, type Item, ItemsApi } from "../api";
 
 const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
 
+const login = localStorage.getItem("login");
+const isAuthenticated = Boolean(localStorage.getItem("token"));
+
 export function ItemDetailPage() {
     const { id } = useParams<{ id: string }>();
     const [item, setItem] = useState<Item | null>(null);
@@ -112,6 +115,10 @@ export function ItemDetailPage() {
             <button
                 onClick={async () => {
                     if (!item?.id) return;
+                    if(!isAuthenticated) {
+                        alert("Нужно авторизоваться!");
+                        return;
+                    }
                     try {
                         await api.reserveItem({id: item.id, reserved: true});
                         alert("Предмет зарезервирован!");
@@ -138,6 +145,14 @@ export function ItemDetailPage() {
             <button
                 onClick={async () => {
                     if (!item?.id) return;
+                    if(!isAuthenticated) {
+                        alert("Нужно авторизоваться!");
+                        return;
+                    }
+                    if(!(item.userLogin == login)) {
+                        alert("Лол, это же не твой товар! Нельзя");
+                        return;
+                    }
                     try {
                         await api.setItemStatus({id: item.id, statusCode: "COMPLETED"});
                         alert("Предмет выполнен!");
@@ -164,6 +179,14 @@ export function ItemDetailPage() {
             <button
                 onClick={async () => {
                     if (!item?.id) return;
+                    if(!isAuthenticated) {
+                        alert("Нужно авторизоваться!");
+                        return;
+                    }
+                    if(!(item.userLogin == login)) {
+                        alert("Лол, это же не твой товар! Нельзя");
+                        return;
+                    }
                     try {
                         await api.setItemStatus({id: item.id, statusCode: "CANCELED"});
                         alert("Предмет отменен!");

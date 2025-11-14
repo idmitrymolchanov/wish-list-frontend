@@ -162,7 +162,7 @@ example().catch(console.error);
 
 ## getItems
 
-> GetItems200Response getItems(statusCode, createDateFrom, createDateTo, limit, offset, showReservedStatus, sortField)
+> GetItems200Response getItems(userLogin, statusCode, createDateFrom, createDateTo, limit, offset, showReservedStatus, sortField)
 
 Получить список предметов
 
@@ -186,6 +186,8 @@ async function example() {
   const api = new ItemsApi(config);
 
   const body = {
+    // string | логин пользователя
+    userLogin: userLogin_example,
     // string | Код статуса (optional)
     statusCode: statusCode_example,
     // Date | Созданы после (optional)
@@ -219,6 +221,7 @@ example().catch(console.error);
 
 | Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
+| **userLogin** | `string` | логин пользователя | [Defaults to `undefined`] |
 | **statusCode** | `string` | Код статуса | [Optional] [Defaults to `undefined`] |
 | **createDateFrom** | `Date` | Созданы после | [Optional] [Defaults to `undefined`] |
 | **createDateTo** | `Date` | Созданы до | [Optional] [Defaults to `undefined`] |

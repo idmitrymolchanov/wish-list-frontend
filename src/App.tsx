@@ -6,17 +6,43 @@ import type { GetItems200Response, ItemBaseInfo, Item } from "./api/models";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
 import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
+import RegisterForm from "./components/RegisterForm.tsx";
+import LoginForm from "./components/LoginForm.tsx";
 
-const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
+// const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
+
+const token = localStorage.getItem("token") || "";
+
+const api = new ItemsApi(
+    new Configuration({
+        basePath: "http://localhost:8080",
+        accessToken: async () => localStorage.getItem("token") || "",
+    })
+);
+
+const login = localStorage.getItem("login");
+const isAuthenticated = Boolean(localStorage.getItem("token"));
+
+const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("login");
+    window.location.reload();
+};
 
 function WishListPage() {
+    const { currentLogin } = useParams<{ currentLogin: string }>();
     const [items, setItems] = useState<ItemBaseInfo[]>([]);
     const [status, setStatus] = useState<string | null>(null);
     const navigate = useNavigate();
 
+    console.log("+++ cur: " + currentLogin)
+
+    const isAuthenticated = Boolean(localStorage.getItem("token"));
+
     const loadItems = async (status?: string | null) => {
         try {
             const response: GetItems200Response = await api.getItems({
+                userLogin: currentLogin ?? "undefined",
                 statusCode: status ?? undefined,
             });
             setItems(response.list ?? []);
@@ -33,23 +59,45 @@ function WishListPage() {
         navigate(`/item/${id}`);
     };
 
-    return (
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
-            <h1>Super Wish List haha</h1>
+    const handleLogin = () => {
+        navigate(`/login`);
+    };
 
-            <button onClick={() => navigate("/add")} style={{ marginBottom: "1rem" }}>
-                Добавить новый предмет
-            </button>
+    const handleRegistration = () => {
+        navigate(`/register`);
+    };
+
+    return (
+        <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
+            <h1>Super WishList</h1>
+
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {isAuthenticated && currentLogin == login && <div><h3>Здарова, {login}!</h3></div>}
+
+                {isAuthenticated && currentLogin == login && (
+                    <button onClick={handleLogout}>Выйти</button>
+                )}
+            </div>
+
+            {/* Кнопка доступна только авторизованным */}
+            {isAuthenticated && currentLogin == login && (
+                <button
+                    onClick={() => navigate("/add")}
+                    style={{marginBottom: "1rem"}}
+                >
+                    Добавить новый предмет
+                </button>
+            )}
 
             {/* Кнопки фильтрации */}
-            <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+            <div style={{display: "flex", gap: "1rem", marginBottom: "1rem"}}>
                 {["OPEN", "COMPLETED", "CANCELED"].map((s) => (
                     <button
                         key={s}
                         onClick={() => {
                             setStatus(s);
                             void loadItems(s);
-                    }}
+                        }}
                     >
                         {s === "OPEN" && "Открыто"}
                         {s === "COMPLETED" && "Завершено"}
@@ -58,21 +106,32 @@ function WishListPage() {
                 ))}
             </div>
 
-            <ItemList items={items} onItemClick={handleItemClick} />
+            <ItemList items={items} onItemClick={handleItemClick}/>
+
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {!isAuthenticated && (
+                    <button onClick={handleLogin}>Войти</button>
+                )}
+            </div>
+
+            <div style={{display: "flex", justifyContent: "space-between"}}>
+                {!isAuthenticated && (
+                    <button onClick={handleRegistration}>Зарегистрироваться</button>
+                )}
+            </div>
         </div>
     );
 }
-
 
 function AddItemPage() {
     const navigate = useNavigate();
 
     const handleItemAdded = () => {
-        navigate("/");
+        navigate("/items/" + login);
     };
 
     return (
-        <div style={{ maxWidth: 600, margin: "0 auto", padding: "2rem" }}>
+        <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
             <h1>Добавить предмет</h1>
             <AddItemForm onItemAdded={handleItemAdded} api={api} />
             <button onClick={() => navigate("/")} style={{ marginTop: "1rem" }}>
@@ -99,9 +158,12 @@ export default function App() {
                 }}
             >
                 <Routes>
-                    <Route path="/" element={<WishListPage/>}/>
+                    <Route path="/register" element={<RegisterForm />} />
+                    <Route path="/login" element={<LoginForm />} />
+                    {/*<Route path="/" element={<WishListPage/>}/>*/}
                     <Route path="/add" element={<AddItemPage/>}/>
                     <Route path="/item/:id" element={<ItemDetailPage/>}/>
+                    <Route path="/items/:currentLogin" element={<WishListPage/>}/>
                 </Routes>
             </div>
         </Router>
