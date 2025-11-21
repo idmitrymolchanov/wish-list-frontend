@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
 /**
  * Базовая информация о предмете
  * @export
@@ -72,7 +71,7 @@ export interface ItemBaseInfo {
 /**
  * Check if a given object implements the ItemBaseInfo interface.
  */
-export function instanceOfItemBaseInfo(value: object): value is ItemBaseInfo {
+export function instanceOfItemBaseInfo(_value: object): _value is ItemBaseInfo {
     return true;
 }
 
@@ -80,7 +79,7 @@ export function ItemBaseInfoFromJSON(json: any): ItemBaseInfo {
     return ItemBaseInfoFromJSONTyped(json, false);
 }
 
-export function ItemBaseInfoFromJSONTyped(json: any, ignoreDiscriminator: boolean): ItemBaseInfo {
+export function ItemBaseInfoFromJSONTyped(json: any, _ignoreDiscriminator: boolean): ItemBaseInfo {
     if (json == null) {
         return json;
     }
@@ -101,7 +100,7 @@ export function ItemBaseInfoToJSON(json: any): ItemBaseInfo {
     return ItemBaseInfoToJSONTyped(json, false);
 }
 
-export function ItemBaseInfoToJSONTyped(value?: ItemBaseInfo | null, ignoreDiscriminator: boolean = false): any {
+export function ItemBaseInfoToJSONTyped(value?: ItemBaseInfo | null, _ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

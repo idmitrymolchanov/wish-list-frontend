@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Configuration, type Item, ItemsApi } from "../api";
 
-const api = new ItemsApi(new Configuration({ basePath: "http://localhost:8080" }));
+const api = new ItemsApi(new Configuration({ basePath: "http://94.158.218.136:8085" }));
 
 const login = localStorage.getItem("login");
 const isAuthenticated = Boolean(localStorage.getItem("token"));

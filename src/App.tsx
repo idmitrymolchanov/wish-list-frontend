@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { Configuration } from "./api";
 import { ItemsApi } from "./api/apis/ItemsApi";
-import type { GetItems200Response, ItemBaseInfo, Item } from "./api/models";
+import type { GetItems200Response, ItemBaseInfo } from "./api/models";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
 import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
@@ -10,17 +10,17 @@ import RegisterForm from "./components/RegisterForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
 import ProjectInfoPage from "./components/ProjectInfoPage.tsx";
 
-const token = localStorage.getItem("token") || "";
+// const token = localStorage.getItem("token") || "";
 
 const api = new ItemsApi(
     new Configuration({
-        basePath: "http://localhost:8080",
+        basePath: "http://94.158.218.136:8085",
         accessToken: async () => localStorage.getItem("token") || "",
     })
 );
 
 const login = localStorage.getItem("login");
-const isAuthenticated = Boolean(localStorage.getItem("token"));
+// const isAuthenticated = Boolean(localStorage.getItem("token"));
 
 const handleLogout = () => {
     localStorage.removeItem("token");
@@ -37,6 +37,7 @@ function WishListPage() {
     const isAuthenticated = Boolean(localStorage.getItem("token"));
 
     const loadItems = async (status?: string | null, loginLocal?: string | null) => {
+        console.log(loginLocal)
         try {
             const response: GetItems200Response = await api.getItems({
                 userLogin: currentLogin ?? "undefined",
@@ -61,7 +62,7 @@ function WishListPage() {
         void loadItems(status);
     }, [status]);
 
-    const handleItemClick = (id: number) => {
+    const handleItemClick = (id: string) => {
         navigate(`/item/${id}`);
     };
 

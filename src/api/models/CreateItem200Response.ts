@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -29,7 +28,7 @@ export interface CreateItem200Response {
 
 /**
  * Check if a given object implements the CreateItem200Response interface.
- */
+ */// @ts-ignore
 export function instanceOfCreateItem200Response(value: object): value is CreateItem200Response {
     return true;
 }
@@ -37,7 +36,7 @@ export function instanceOfCreateItem200Response(value: object): value is CreateI
 export function CreateItem200ResponseFromJSON(json: any): CreateItem200Response {
     return CreateItem200ResponseFromJSONTyped(json, false);
 }
-
+// @ts-ignore
 export function CreateItem200ResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): CreateItem200Response {
     if (json == null) {
         return json;
@@ -51,7 +50,7 @@ export function CreateItem200ResponseFromJSONTyped(json: any, ignoreDiscriminato
 export function CreateItem200ResponseToJSON(json: any): CreateItem200Response {
     return CreateItem200ResponseToJSONTyped(json, false);
 }
-
+// @ts-ignore
 export function CreateItem200ResponseToJSONTyped(value?: CreateItem200Response | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;

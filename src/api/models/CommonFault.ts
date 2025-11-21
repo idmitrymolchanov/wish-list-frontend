@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { mapValues } from '../runtime';
 /**
  * Тело для общего описания ошибок
  * @export
@@ -65,7 +64,7 @@ export interface CommonFault {
 
 /**
  * Check if a given object implements the CommonFault interface.
- */
+ */// @ts-ignore
 export function instanceOfCommonFault(value: object): value is CommonFault {
     return true;
 }
@@ -73,7 +72,7 @@ export function instanceOfCommonFault(value: object): value is CommonFault {
 export function CommonFaultFromJSON(json: any): CommonFault {
     return CommonFaultFromJSONTyped(json, false);
 }
-
+// @ts-ignore
 export function CommonFaultFromJSONTyped(json: any, ignoreDiscriminator: boolean): CommonFault {
     if (json == null) {
         return json;
@@ -93,7 +92,7 @@ export function CommonFaultFromJSONTyped(json: any, ignoreDiscriminator: boolean
 export function CommonFaultToJSON(json: any): CommonFault {
     return CommonFaultToJSONTyped(json, false);
 }
-
+// @ts-ignore
 export function CommonFaultToJSONTyped(value?: CommonFault | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;

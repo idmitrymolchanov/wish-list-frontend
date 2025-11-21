@@ -29,6 +29,7 @@ export interface ConfigurationParameters {
 }
 
 export class Configuration {
+    // @ts-ignore
     constructor(private configuration: ConfigurationParameters = {}) {}
 
     set config(configuration: Configuration) {
@@ -94,6 +95,7 @@ export class BaseAPI {
     private static readonly jsonRegex = new RegExp('^(:?application\/json|[^;/ \t]+\/[^;/ \t]+[+]json)[ \t]*(:?;.*)?$', 'i');
     private middleware: Middleware[];
 
+    // @ts-ignore
     constructor(protected configuration = DefaultConfig) {
         this.middleware = configuration.middleware;
     }
@@ -259,6 +261,7 @@ function isFormData(value: any): value is FormData {
 
 export class ResponseError extends Error {
     override name: "ResponseError" = "ResponseError";
+    // @ts-ignore
     constructor(public response: Response, msg?: string) {
         super(msg);
     }
@@ -266,6 +269,7 @@ export class ResponseError extends Error {
 
 export class FetchError extends Error {
     override name: "FetchError" = "FetchError";
+    // @ts-ignore
     constructor(public cause: Error, msg?: string) {
         super(msg);
     }
@@ -273,6 +277,7 @@ export class FetchError extends Error {
 
 export class RequiredError extends Error {
     override name: "RequiredError" = "RequiredError";
+    // @ts-ignore
     constructor(public field: string, msg?: string) {
         super(msg);
     }
@@ -400,6 +405,7 @@ export interface ResponseTransformer<T> {
 }
 
 export class JSONApiResponse<T> {
+    // @ts-ignore
     constructor(public raw: Response, private transformer: ResponseTransformer<T> = (jsonValue: any) => jsonValue) {}
 
     async value(): Promise<T> {
@@ -408,6 +414,7 @@ export class JSONApiResponse<T> {
 }
 
 export class VoidApiResponse {
+    // @ts-ignore
     constructor(public raw: Response) {}
 
     async value(): Promise<void> {
@@ -416,6 +423,7 @@ export class VoidApiResponse {
 }
 
 export class BlobApiResponse {
+    // @ts-ignore
     constructor(public raw: Response) {}
 
     async value(): Promise<Blob> {
@@ -424,6 +432,7 @@ export class BlobApiResponse {
 }
 
 export class TextApiResponse {
+    // @ts-ignore
     constructor(public raw: Response) {}
 
     async value(): Promise<string> {

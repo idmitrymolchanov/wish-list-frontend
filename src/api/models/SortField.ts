@@ -38,7 +38,7 @@ export function instanceOfSortField(value: any): boolean {
 export function SortFieldFromJSON(json: any): SortField {
     return SortFieldFromJSONTyped(json, false);
 }
-
+// @ts-ignore
 export function SortFieldFromJSONTyped(json: any, ignoreDiscriminator: boolean): SortField {
     return json as SortField;
 }
@@ -46,7 +46,7 @@ export function SortFieldFromJSONTyped(json: any, ignoreDiscriminator: boolean):
 export function SortFieldToJSON(value?: SortField | null): any {
     return value as any;
 }
-
+// @ts-ignore
 export function SortFieldToJSONTyped(value: any, ignoreDiscriminator: boolean): SortField {
     return value as SortField;
 }

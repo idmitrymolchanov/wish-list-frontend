@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE = "http://localhost:8080/api/auth";
+const API_BASE = "http://94.158.218.136:8085/api/auth";
 
 export default function RegisterForm() {
     const [login, setLogin] = useState("");

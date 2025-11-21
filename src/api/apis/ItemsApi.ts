@@ -15,7 +15,6 @@
 
 import * as runtime from '../runtime';
 import type {
-  CommonFault,
   CreateItem200Response,
   GetItems200Response,
   Item,
@@ -23,18 +22,11 @@ import type {
   SortField,
 } from '../models/index';
 import {
-    CommonFaultFromJSON,
-    CommonFaultToJSON,
     CreateItem200ResponseFromJSON,
-    CreateItem200ResponseToJSON,
     GetItems200ResponseFromJSON,
-    GetItems200ResponseToJSON,
     ItemFromJSON,
     ItemToJSON,
-    ItemUpdateFromJSON,
-    ItemUpdateToJSON,
-    SortFieldFromJSON,
-    SortFieldToJSON,
+    ItemUpdateToJSON
 } from '../models/index';
 
 export interface CreateItemRequest {
