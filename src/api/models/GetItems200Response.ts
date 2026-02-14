@@ -12,10 +12,13 @@
  * Do not edit the class manually.
  */
 
+import { mapValues } from '../runtime';
 import type { ItemBaseInfo } from './ItemBaseInfo';
 import {
     ItemBaseInfoFromJSON,
+    ItemBaseInfoFromJSONTyped,
     ItemBaseInfoToJSON,
+    ItemBaseInfoToJSONTyped,
 } from './ItemBaseInfo';
 
 /**
@@ -41,7 +44,7 @@ export interface GetItems200Response {
 /**
  * Check if a given object implements the GetItems200Response interface.
  */
-export function instanceOfGetItems200Response(_value: object): _value is GetItems200Response {
+export function instanceOfGetItems200Response(value: object): value is GetItems200Response {
     return true;
 }
 
@@ -49,7 +52,7 @@ export function GetItems200ResponseFromJSON(json: any): GetItems200Response {
     return GetItems200ResponseFromJSONTyped(json, false);
 }
 
-export function GetItems200ResponseFromJSONTyped(json: any, _ignoreDiscriminator: boolean): GetItems200Response {
+export function GetItems200ResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): GetItems200Response {
     if (json == null) {
         return json;
     }
@@ -64,7 +67,7 @@ export function GetItems200ResponseToJSON(json: any): GetItems200Response {
     return GetItems200ResponseToJSONTyped(json, false);
 }
 
-export function GetItems200ResponseToJSONTyped(value?: GetItems200Response | null, _ignoreDiscriminator: boolean = false): any {
+export function GetItems200ResponseToJSONTyped(value?: GetItems200Response | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

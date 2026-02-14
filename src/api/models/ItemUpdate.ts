@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { mapValues } from '../runtime';
 /**
  * 
  * @export
@@ -94,7 +95,7 @@ export interface ItemUpdate {
 
 /**
  * Check if a given object implements the ItemUpdate interface.
- */// @ts-ignore
+ */
 export function instanceOfItemUpdate(value: object): value is ItemUpdate {
     return true;
 }
@@ -102,7 +103,7 @@ export function instanceOfItemUpdate(value: object): value is ItemUpdate {
 export function ItemUpdateFromJSON(json: any): ItemUpdate {
     return ItemUpdateFromJSONTyped(json, false);
 }
-// @ts-ignore
+
 export function ItemUpdateFromJSONTyped(json: any, ignoreDiscriminator: boolean): ItemUpdate {
     if (json == null) {
         return json;
@@ -127,7 +128,7 @@ export function ItemUpdateFromJSONTyped(json: any, ignoreDiscriminator: boolean)
 export function ItemUpdateToJSON(json: any): ItemUpdate {
     return ItemUpdateToJSONTyped(json, false);
 }
-// @ts-ignore
+
 export function ItemUpdateToJSONTyped(value?: ItemUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;

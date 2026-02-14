@@ -2,7 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-const API_BASE = "http://94.158.218.136:8085/api/auth";
+// const API_BASE = "http://94.158.218.136:8085/api/auth";
+const API_BASE = "http://localhost:8085/api/auth";
 
 export default function LoginForm() {
     const [login, setLogin] = useState("");
@@ -25,31 +26,47 @@ export default function LoginForm() {
             navigate("/items/" + login);
         } catch (err: any) {
             console.error(err);
-            setError(err.response?.code || "Ошибка при входе");
+            setError(err.response?.code || "login error");
         }
     };
 
     return (
-        <div style={{ maxWidth: 400, margin: "2rem auto", padding: "2rem", border: "1px solid #ddd", borderRadius: 8 }}>
-            <h2>Регистрация</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-                <input
-                    type="text"
-                    placeholder="Логин"
-                    value={login}
-                    onChange={(e) => setLogin(e.target.value)}
-                    required
-                />
-                <input
-                    type="password"
-                    placeholder="Пароль"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-                <button type="submit" style={{ padding: "0.5rem 1rem" }}>Войти</button>
-            </form>
+        <div className="page-container">
+            <h1>LOG IN</h1>
+
+            {error && <p className="form-error">{error}</p>}
+
+            <div className="item-details">
+                <form onSubmit={handleSubmit} className="app-form">
+                    <label htmlFor="login">username</label>
+                    <div className="form-group">
+                        <input
+                            id="login"
+                            type="text"
+                            placeholder="enter login"
+                            value={login}
+                            onChange={(e) => setLogin(e.target.value)}
+                            required
+                            className="app-input"
+                        />
+                    </div>
+                    <label htmlFor="password">password</label>
+                    <div className="form-group">
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="enter password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                            className="app-input"
+                        />
+                    </div>
+                    <button type="submit" className="app-button full-width">
+                        ENTER
+                    </button>
+                </form>
+            </div>
         </div>
     );
 }

@@ -12,10 +12,13 @@
  * Do not edit the class manually.
  */
 
+import { mapValues } from '../runtime';
 import type { ItemStatus } from './ItemStatus';
 import {
     ItemStatusFromJSON,
+    ItemStatusFromJSONTyped,
     ItemStatusToJSON,
+    ItemStatusToJSONTyped,
 } from './ItemStatus';
 
 /**
@@ -130,7 +133,7 @@ export function ItemFromJSON(json: any): Item {
     return ItemFromJSONTyped(json, false);
 }
 
-export function ItemFromJSONTyped(json: any, _ignoreDiscriminator: boolean): Item {
+export function ItemFromJSONTyped(json: any, ignoreDiscriminator: boolean): Item {
     if (json == null) {
         return json;
     }
@@ -158,7 +161,7 @@ export function ItemToJSON(json: any): Item {
     return ItemToJSONTyped(json, false);
 }
 
-export function ItemToJSONTyped(value?: Item | null, _ignoreDiscriminator: boolean = false): any {
+export function ItemToJSONTyped(value?: Item | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

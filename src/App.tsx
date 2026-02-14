@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate, useParams } from "react-router-dom";
-import { Configuration } from "./api";
-import { ItemsApi } from "./api/apis/ItemsApi";
-import type { GetItems200Response, ItemBaseInfo } from "./api/models";
+import {useEffect, useState} from "react";
+import {BrowserRouter as Router, Route, Routes, useNavigate, useParams} from "react-router-dom";
+import {Configuration} from "./api";
+import {ItemsApi} from "./api/apis/ItemsApi";
+import type {GetItems200Response, ItemBaseInfo} from "./api/models";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
 import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
@@ -10,38 +10,52 @@ import RegisterForm from "./components/RegisterForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
 import ProjectInfoPage from "./components/ProjectInfoPage.tsx";
 
-// const token = localStorage.getItem("token") || "";
-
 const api = new ItemsApi(
     new Configuration({
-        basePath: "http://94.158.218.136:8085",
+        // basePath: "http://94.158.218.136:8085",
+        basePath: "http://localhost:8085",
         accessToken: async () => localStorage.getItem("token") || "",
     })
 );
 
-const login = localStorage.getItem("login");
-// const isAuthenticated = Boolean(localStorage.getItem("token"));
-
-const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("login");
-    window.location.reload();
-};
-
 function WishListPage() {
-    const { currentLogin } = useParams<{ currentLogin: string }>();
-    const [items, setItems] = useState<ItemBaseInfo[]>([]);
-    const [status, setStatus] = useState<string | null>(null);
+    const {currentLogin} = useParams<{ currentLogin: string }>();
     const navigate = useNavigate();
 
-    const isAuthenticated = Boolean(localStorage.getItem("token"));
+    const [items, setItems] = useState<ItemBaseInfo[]>([]);
+    const [status, setStatus] = useState<string | null>(null);
+
+    const [login, setLogin] = useState<string | null>(
+        localStorage.getItem("login")
+    );
+
+    const [isAuthenticated, setIsAuthenticated] = useState(
+        Boolean(localStorage.getItem("token"))
+    );
+
+    useEffect(() => {
+        const token = localStorage.getItem("token");
+        const storedLogin = localStorage.getItem("login");
+
+        setIsAuthenticated(Boolean(token));
+        setLogin(storedLogin);
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("login");
+
+        setIsAuthenticated(false);
+        setLogin(null);
+    };
 
     const loadItems = async (status?: string | null, loginLocal?: string | null) => {
         console.log(loginLocal)
         try {
             const response: GetItems200Response = await api.getItems({
                 userLogin: currentLogin ?? "undefined",
-                statusCode: status ?? undefined,
+                statusCode: status ?? "OPEN",
+                showReservedStatus: login != currentLogin && isAuthenticated
             });
             setItems(response.list ?? []);
         } catch (err) {
@@ -50,10 +64,9 @@ function WishListPage() {
     };
 
     useEffect(() => {
-        if (!login){
+        if (!login) {
             void loadItems(status);
-        }
-        else {
+        } else {
             void loadItems(status, login);
         }
     }, [status, login]);
@@ -78,65 +91,82 @@ function WishListPage() {
         navigate(`/info`);
     };
 
+    const handleHome = () => {
+        navigate(`/items/${login}`);
+    };
+
     return (
         <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
-            <h1>Super WishList</h1>
-
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                {isAuthenticated && <div><h3>Здарова, {login}!</h3></div>}
+            <div className="page-container">
+                <h1>Super WishList</h1>
 
                 {isAuthenticated && (
-                    <button onClick={handleLogout} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
-                    >Выйти</button>
+                    <div className="greeting">
+                        <h3>Welcome, {login}!</h3>
+                    </div>
                 )}
-            </div>
 
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                {(
-                    <button onClick={handleInfoPage} style={{marginBottom: "1rem", backgroundColor: "#d3f6ab"}}
-                    >О проекте</button>
-                )}
-            </div>
-
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                {!isAuthenticated && (
-                    <button onClick={handleLogin} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
-                    >Войти</button>
-                )}
-                {!isAuthenticated && (
-                    <button onClick={handleRegistration} style={{marginBottom: "1rem", backgroundColor: "#ffdada"}}
-                    >Зарегистрироваться</button>
-                )}
-            </div>
-
-            {/* Кнопка доступна только авторизованным */}
-            {isAuthenticated && currentLogin == login && (
-                <button
-                    onClick={() => navigate("/add")}
-                    style={{marginBottom: "1rem", backgroundColor: "#d3f6ab"}}
-                >
-                    Добавить новый предмет
-                </button>
-            )}
-
-            {/* Кнопки фильтрации */}
-            <div style={{display: "flex", gap: "1rem", marginBottom: "1rem"}}>
-                {["OPEN", "COMPLETED", "CANCELED"].map((s) => (
-                    <button
-                        key={s}
-                        onClick={() => {
-                            setStatus(s);
-                            void loadItems(s);
-                        }}
-                    >
-                        {s === "OPEN" && "Открыто"}
-                        {s === "COMPLETED" && "Завершено"}
-                        {s === "CANCELED" && "Отменено"}
+                <div className="header-actions">
+                    <button onClick={handleInfoPage} className="app-button">
+                        ABOUT ⓘ
                     </button>
-                ))}
-            </div>
 
-            <ItemList items={items} onItemClick={handleItemClick}/>
+                    {isAuthenticated && (
+                        <button onClick={() => {
+                            void handleHome()
+                            void loadItems("OPEN", login);
+                        }} className="app-button">
+                            HOME 合
+                        </button>
+                    )}
+
+                    {isAuthenticated && (
+                        <button onClick={handleLogout} className="app-button danger">
+                            LOGOUT ↩
+                        </button>
+                    )}
+
+                    {!isAuthenticated && (
+                        <button onClick={handleLogin} className="app-button">
+                            LOGIN ↪
+                        </button>
+                    )}
+
+                    {!isAuthenticated && (
+                        <button onClick={handleRegistration} className="app-button">
+                            REGISTER ↪
+                        </button>
+                    )}
+                </div>
+
+                {/* Кнопка доступна только авторизованным */}
+                {isAuthenticated && currentLogin == login && (
+                    <button
+                        onClick={() => navigate("/add")} className="app-button-add-item">
+                        ADD NEW ITEM
+                    </button>
+                )}
+
+                {/* Кнопки фильтрации */}
+                <div className="status-filter-actions">
+                    {["OPEN", "COMPLETED", "CANCELED"].map((s) => (
+                        <button
+                            key={s}
+                            onClick={() => {
+                                setStatus(s);
+                                void loadItems(s);
+                            }}
+                            className="app-button-status-filter"
+                        >
+                            {s === "OPEN" && "Open"}
+                            {s === "COMPLETED" && "Completed"}
+                            {s === "CANCELED" && "Canceled"}
+                        </button>
+                    ))}
+                </div>
+
+                <ItemList items={items} onItemClick={handleItemClick}/>
+            </div>
         </div>
     );
 }
@@ -144,17 +174,28 @@ function WishListPage() {
 function AddItemPage() {
     const navigate = useNavigate();
 
+    const [login, setLogin] = useState<string | null>(
+        localStorage.getItem("login")
+    );
+
+    useEffect(() => {
+        const storedLogin = localStorage.getItem("login");
+        setLogin(storedLogin);
+    }, []);
+
     const handleItemAdded = () => {
         navigate("/items/" + login);
     };
 
     return (
-        <div style={{maxWidth: 600, margin: "0 auto", padding: "2rem"}}>
-            <h1>Добавить предмет</h1>
+        <div className="page-container">
+            <h1>Add new item</h1>
             <AddItemForm onItemAdded={handleItemAdded} api={api}/>
-            <button onClick={() => navigate("/")} style={{marginTop: "1rem"}}>
-                Отмена
-            </button>
+            <div className="status-filter-actions">
+                <button onClick={() => navigate("/items/" + login)} className="app-button">
+                    CANCEL
+                </button>
+            </div>
         </div>
     );
 }
@@ -176,8 +217,8 @@ export default function App() {
                 }}
             >
                 <Routes>
-                    <Route path="/register" element={<RegisterForm />} />
-                    <Route path="/login" element={<LoginForm />} />
+                    <Route path="/register" element={<RegisterForm/>}/>
+                    <Route path="/login" element={<LoginForm/>}/>
                     {/*<Route path="/" element={<WishListPage/>}/>*/}
                     <Route path="/add" element={<AddItemPage/>}/>
                     <Route path="/item/:id" element={<ItemDetailPage/>}/>
@@ -186,5 +227,5 @@ export default function App() {
                 </Routes>
             </div>
         </Router>
-);
+    );
 }

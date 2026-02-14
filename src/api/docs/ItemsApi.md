@@ -4,12 +4,14 @@ All URIs are relative to *https://todo/newgor-wishlist*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**createItem**](ItemsApi.md#createitem) | **POST** /wishlist | Создать новый предмет |
-| [**getItemById**](ItemsApi.md#getitembyid) | **GET** /wishlist/{id} | Получить предмет вишлиста по id |
-| [**getItems**](ItemsApi.md#getitems) | **GET** /wishlist | Получить список предметов |
-| [**patchItem**](ItemsApi.md#patchitem) | **PATCH** /wishlist/{id} | Обновить предмет |
-| [**reserveItem**](ItemsApi.md#reserveitem) | **POST** /wishlist/{id}/reserve | Изменить статус резерва |
-| [**setItemStatus**](ItemsApi.md#setitemstatus) | **POST** /wishlist/{id}/status | Обновить статус предмета |
+| [**createItem**](ItemsApi.md#createitem) | **POST** /wishlist/item | Создать новый предмет |
+| [**getItemById**](ItemsApi.md#getitembyid) | **GET** /wishlist/item/{id} | Получить предмет вишлиста по id |
+| [**getItemImage**](ItemsApi.md#getitemimage) | **GET** /wishlist/item/{id}/image | Получить изображение предмета |
+| [**getItems**](ItemsApi.md#getitems) | **GET** /wishlist/item | Получить список предметов |
+| [**patchItem**](ItemsApi.md#patchitem) | **PATCH** /wishlist/item/{id} | Обновить предмет |
+| [**reserveItem**](ItemsApi.md#reserveitem) | **POST** /wishlist/item/{id}/reserve | Изменить статус резерва |
+| [**setItemStatus**](ItemsApi.md#setitemstatus) | **POST** /wishlist/item/{id}/status | Обновить статус предмета |
+| [**uploadItemImage**](ItemsApi.md#uploaditemimage) | **POST** /wishlist/item/{id}/image | Загрузить/обновить изображение предмета |
 
 
 
@@ -155,6 +157,74 @@ example().catch(console.error);
 | **400** | - Bad Request,   code: 00001,   message: Некорректный запрос  |  -  |
 | **404** | - Not Found,   code: 00002,   message: Предмет не найден  |  -  |
 | **409** | - code: 00003   message: При выполнении операции произошел сбой. Для уточнения деталей ошибки необходимо выполнить анализ логов  |  -  |
+| **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## getItemImage
+
+> Blob getItemImage(id)
+
+Получить изображение предмета
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ItemsApi,
+} from '';
+import type { GetItemImageRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new ItemsApi();
+
+  const body = {
+    // string | Идентификатор предмета
+    id: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
+  } satisfies GetItemImageRequest;
+
+  try {
+    const data = await api.getItemImage(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Идентификатор предмета | [Defaults to `undefined`] |
+
+### Return type
+
+**Blob**
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `image/png`, `image/jpeg`, `image/webp`, `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Изображение предмета |  -  |
+| **404** | - code: 00002   message: Изображение не найдено  |  -  |
+| **400** | - code: 00001   message: Некорректный запрос  |  -  |
 | **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -475,6 +545,80 @@ example().catch(console.error);
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | OK |  -  |
+| **400** | - Bad Request,   code: 00001,   message: Некорректный запрос  |  -  |
+| **409** | - code: 00003   message: При выполнении операции произошел сбой. Для уточнения деталей ошибки необходимо выполнить анализ логов  |  -  |
+| **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## uploadItemImage
+
+> CreateItem200Response uploadItemImage(id, file, metadata)
+
+Загрузить/обновить изображение предмета
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ItemsApi,
+} from '';
+import type { UploadItemImageRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const api = new ItemsApi();
+
+  const body = {
+    // string | Идентификатор предмета
+    id: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
+    // Blob | Изображение предмета
+    file: BINARY_DATA_HERE,
+    // string | JSON с метаинформацией о предмете
+    metadata: metadata_example,
+  } satisfies UploadItemImageRequest;
+
+  try {
+    const data = await api.uploadItemImage(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Идентификатор предмета | [Defaults to `undefined`] |
+| **file** | `Blob` | Изображение предмета | [Defaults to `undefined`] |
+| **metadata** | `string` | JSON с метаинформацией о предмете | [Defaults to `undefined`] |
+
+### Return type
+
+[**CreateItem200Response**](CreateItem200Response.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `multipart/form-data`
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | OK |  -  |
 | **400** | - Bad Request,   code: 00001,   message: Некорректный запрос  |  -  |
 | **409** | - code: 00003   message: При выполнении операции произошел сбой. Для уточнения деталей ошибки необходимо выполнить анализ логов  |  -  |
 | **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |

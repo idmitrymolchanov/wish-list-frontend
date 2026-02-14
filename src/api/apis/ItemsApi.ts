@@ -15,6 +15,7 @@
 
 import * as runtime from '../runtime';
 import type {
+  CommonFault,
   CreateItem200Response,
   GetItems200Response,
   Item,
@@ -22,11 +23,18 @@ import type {
   SortField,
 } from '../models/index';
 import {
+    CommonFaultFromJSON,
+    CommonFaultToJSON,
     CreateItem200ResponseFromJSON,
+    CreateItem200ResponseToJSON,
     GetItems200ResponseFromJSON,
+    GetItems200ResponseToJSON,
     ItemFromJSON,
     ItemToJSON,
-    ItemUpdateToJSON
+    ItemUpdateFromJSON,
+    ItemUpdateToJSON,
+    SortFieldFromJSON,
+    SortFieldToJSON,
 } from '../models/index';
 
 export interface CreateItemRequest {
@@ -34,6 +42,10 @@ export interface CreateItemRequest {
 }
 
 export interface GetItemByIdRequest {
+    id: string;
+}
+
+export interface GetItemImageRequest {
     id: string;
 }
 
@@ -63,6 +75,12 @@ export interface SetItemStatusRequest {
     statusCode?: string;
 }
 
+export interface UploadItemImageRequest {
+    id: string;
+    file: Blob;
+    metadata: string;
+}
+
 /**
  * 
  */
@@ -87,7 +105,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist`;
+        let urlPath = `/wishlist/item`;
 
         const response = await this.request({
             path: urlPath,
@@ -133,7 +151,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/{id}`;
+        let urlPath = `/wishlist/item/{id}`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
@@ -152,6 +170,43 @@ export class ItemsApi extends runtime.BaseAPI {
      */
     async getItemById(requestParameters: GetItemByIdRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Item> {
         const response = await this.getItemByIdRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * Получить изображение предмета
+     */
+    async getItemImageRaw(requestParameters: GetItemImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Blob>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling getItemImage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+
+        let urlPath = `/wishlist/item/{id}/image`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.BlobApiResponse(response);
+    }
+
+    /**
+     * Получить изображение предмета
+     */
+    async getItemImage(requestParameters: GetItemImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Blob> {
+        const response = await this.getItemImageRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -212,7 +267,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist`;
+        let urlPath = `/wishlist/item`;
 
         const response = await this.request({
             path: urlPath,
@@ -267,7 +322,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/{id}`;
+        let urlPath = `/wishlist/item/{id}`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
@@ -324,7 +379,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/{id}/reserve`;
+        let urlPath = `/wishlist/item/{id}/reserve`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
@@ -372,7 +427,7 @@ export class ItemsApi extends runtime.BaseAPI {
             }
         }
 
-        let urlPath = `/wishlist/{id}/status`;
+        let urlPath = `/wishlist/item/{id}/status`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
 
         const response = await this.request({
@@ -390,6 +445,82 @@ export class ItemsApi extends runtime.BaseAPI {
      */
     async setItemStatus(requestParameters: SetItemStatusRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.setItemStatusRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Загрузить/обновить изображение предмета
+     */
+    async uploadItemImageRaw(requestParameters: UploadItemImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<CreateItem200Response>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling uploadItemImage().'
+            );
+        }
+
+        if (requestParameters['file'] == null) {
+            throw new runtime.RequiredError(
+                'file',
+                'Required parameter "file" was null or undefined when calling uploadItemImage().'
+            );
+        }
+
+        if (requestParameters['metadata'] == null) {
+            throw new runtime.RequiredError(
+                'metadata',
+                'Required parameter "metadata" was null or undefined when calling uploadItemImage().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const consumes: runtime.Consume[] = [
+            { contentType: 'multipart/form-data' },
+        ];
+        // @ts-ignore: canConsumeForm may be unused
+        const canConsumeForm = runtime.canConsumeForm(consumes);
+
+        let formParams: { append(param: string, value: any): any };
+        let useForm = false;
+        // use FormData to transmit files using content-type "multipart/form-data"
+        useForm = canConsumeForm;
+        if (useForm) {
+            formParams = new FormData();
+        } else {
+            formParams = new URLSearchParams();
+        }
+
+        if (requestParameters['file'] != null) {
+            formParams.append('file', requestParameters['file'] as any);
+        }
+
+        if (requestParameters['metadata'] != null) {
+            formParams.append('metadata', requestParameters['metadata'] as any);
+        }
+
+
+        let urlPath = `/wishlist/item/{id}/image`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: formParams,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => CreateItem200ResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Загрузить/обновить изображение предмета
+     */
+    async uploadItemImage(requestParameters: UploadItemImageRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateItem200Response> {
+        const response = await this.uploadItemImageRaw(requestParameters, initOverrides);
+        return await response.value();
     }
 
 }

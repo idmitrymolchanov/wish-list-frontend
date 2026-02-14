@@ -40,7 +40,7 @@ export function instanceOfItemStatus(value: any): boolean {
 export function ItemStatusFromJSON(json: any): ItemStatus {
     return ItemStatusFromJSONTyped(json, false);
 }
-// @ts-ignore
+
 export function ItemStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean): ItemStatus {
     return json as ItemStatus;
 }
@@ -48,7 +48,7 @@ export function ItemStatusFromJSONTyped(json: any, ignoreDiscriminator: boolean)
 export function ItemStatusToJSON(value?: ItemStatus | null): any {
     return value as any;
 }
-// @ts-ignore
+
 export function ItemStatusToJSONTyped(value: any, ignoreDiscriminator: boolean): ItemStatus {
     return value as ItemStatus;
 }

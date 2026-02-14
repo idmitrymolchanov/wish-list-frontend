@@ -1,0 +1,43 @@
+/* ===== FORM ===== */
+
+.app-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* ===== INPUT ===== */
+
+.app-input {
+    padding: 0.6rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--button-border);
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+}
+
+.app-input::placeholder {
+    opacity: 1;
+}
+
+.app-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--button-border);
+}
+
+/* ===== ERROR ===== */
+
+.form-error {
+    color: #d00000;
+    font-size: 0.9rem;
+}
+
+/* Dark mode error мягче */
+@media (prefers-color-scheme: dark) {
+    .form-error {
+        color: #ff6b6b;
+    }
+}

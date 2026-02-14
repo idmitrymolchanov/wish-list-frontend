@@ -14,19 +14,7 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
         currency: "RUB",
         linkToSite: "",
         priority: 0,
-        image: ""
     });
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.files && e.target.files[0]) {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.readAsDataURL(file); // конвертируем в base64
-            reader.onload = () => {
-                setForm({ ...form, image: reader.result as string });
-            };
-        }
-    };
 
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -49,12 +37,11 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
             priority: form.priority,
             statusCode: ItemStatus.Open,
             reserved: false,
-            image: form.image
         };
 
         try {
             await api.createItem({ item });
-            setForm({name: "", description: "", amount: "0.00", currency: "RUB", linkToSite: "", priority: 0, image: ""});
+            setForm({name: "", description: "", amount: "0.00", currency: "RUB", linkToSite: "", priority: 0});
             onItemAdded();
         } catch (err) {
             console.error("Ошибка при добавлении предмета:", err);
@@ -65,48 +52,62 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
     };
 
     return (
-        <form onSubmit={handleSubmit} style={{display: "flex", flexDirection: "column", gap: "0.5rem"}}>
+        <form onSubmit={handleSubmit} className="app-form">
             <input
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                placeholder="Название"
+                placeholder="item name"
                 required
+                className="app-input"
             />
             <input
                 name="description"
                 value={form.description}
                 onChange={handleChange}
-                placeholder="Описание"
+                placeholder="description"
+                className="app-input"
             />
             <input
                 name="amount"
                 value={form.amount}
                 onChange={handleChange}
-                placeholder="Сумма"
+                placeholder="amount"
                 type="number"
+                className="app-input"
             />
             <input
                 name="currency"
                 value={form.currency}
                 onChange={handleChange}
-                placeholder="Валюта"
+                placeholder="currency"
+                className="app-input"
             />
             <input
                 name="linkToSite"
                 value={form.linkToSite}
                 onChange={handleChange}
-                placeholder="ссылка на товар"
+                placeholder="item link"
+                className="app-input"
             />
-            <input
-                name="priority"
-                value={form.priority}
-                onChange={handleChange}
-                placeholder="приоритет"
-            />
-            <input type="file" accept="image/*" onChange={handleFileChange}/>
-            <button type="submit" disabled={loading}>
-                {loading ? "Сохраняем..." : "Сохранить"}
+
+            <div className="form-group">
+                <label htmlFor="priority">Priority (enter from 0 to 10):  </label>
+                <input
+                    id="priority"
+                    name="priority"
+                    value={form.priority}
+                    onChange={handleChange}
+                    placeholder="1 - 10"
+                    className="app-input"
+                    type="number"
+                    min={0}
+                    max={10}
+                />
+            </div>
+
+            <button type="submit" disabled={loading} className="app-button-status-filter">
+                {loading ? "Saving..." : "Save"}
             </button>
             {error && <p style={{color: "red"}}>{error}</p>}
         </form>

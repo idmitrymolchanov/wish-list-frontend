@@ -1,0 +1,151 @@
+/* ===== LIST ===== */
+
+.item-list {
+    list-style: none;
+    padding: 0;
+}
+
+.item-card {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease;
+
+    border: 1px solid #ddd;
+    background-color: var(--card-bg);
+}
+
+.item-card:hover {
+    transform: translateY(-2px);
+}
+
+/* Зарезервировано */
+.item-card.reserved {
+    background-color: var(--reserved-bg);
+}
+
+/* Правая часть */
+.item-status {
+    font-size: 1.2rem;
+    opacity: 0.85;
+    margin-left: auto;
+}
+
+/* ===== ITEM DETAILS CARD ===== */
+
+.item-details {
+    padding: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    margin-top: 1rem;
+    text-align: left;
+}
+
+.item-details p {
+    margin: 0.4rem 0;
+}
+
+.item-details strong {
+    font-weight: 600;
+}
+
+/* ===== LINK ===== */
+
+.app-link {
+    color: var(--link-color);
+    word-break: break-all;
+    text-decoration: none;
+}
+
+.app-link:hover {
+    text-decoration: underline;
+}
+
+/* ===== IMAGE UPLOAD BLOCK ===== */
+
+.image-upload-block {
+    margin-bottom: 1rem;
+}
+
+/* ===== IMAGE CARD ===== */
+
+.image-card {
+    text-align: center;
+    padding: 0.75rem;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    margin-bottom: 1rem;
+}
+
+.image-card img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+/* ===== FILE INPUT ===== */
+
+.file-input {
+    display: block;
+    width: 100%;
+    margin-bottom: 1rem;
+    color: var(--button-text);
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.login-form label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--button-text);
+    text-align: left;
+}
+
+.login-form .app-input {
+    width: 100%;
+}
+
+.login-form .app-button {
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+/* ===== THEME VARIABLES ===== */
+
+:root {
+    --card-bg: #ffffff;
+    --reserved-bg: #d9fdd3;
+    --card-border: #000000;
+    --link-color: #0066cc;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --card-bg: #1e1e1e;
+        --reserved-bg: #254233;
+        --card-border: #ffffff;
+        --link-color: #66aaff;
+    }
+
+    .item-card {
+        border: 1px solid #333;
+    }
+}
