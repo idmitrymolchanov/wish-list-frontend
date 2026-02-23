@@ -42,13 +42,19 @@ export interface ItemUpdate {
      * @type {string}
      * @memberof ItemUpdate
      */
-    name?: string;
+    name: string;
     /**
      * сумма
+     * @type {number}
+     * @memberof ItemUpdate
+     */
+    amount: number;
+    /**
+     * валюта
      * @type {string}
      * @memberof ItemUpdate
      */
-    amount?: string;
+    currency: string;
     /**
      * зарезервирован ли товар
      * @type {boolean}
@@ -60,19 +66,13 @@ export interface ItemUpdate {
      * @type {string}
      * @memberof ItemUpdate
      */
-    priority?: string;
+    priority: string;
     /**
      * наименование приоритета
      * @type {string}
      * @memberof ItemUpdate
      */
     priorityName?: string;
-    /**
-     * валюта
-     * @type {string}
-     * @memberof ItemUpdate
-     */
-    currency?: string;
     /**
      * описание
      * @type {string}
@@ -97,6 +97,10 @@ export interface ItemUpdate {
  * Check if a given object implements the ItemUpdate interface.
  */
 export function instanceOfItemUpdate(value: object): value is ItemUpdate {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('amount' in value) || value['amount'] === undefined) return false;
+    if (!('currency' in value) || value['currency'] === undefined) return false;
+    if (!('priority' in value) || value['priority'] === undefined) return false;
     return true;
 }
 
@@ -113,12 +117,12 @@ export function ItemUpdateFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'id': json['id'] == null ? undefined : json['id'],
         'createDate': json['createDate'] == null ? undefined : (new Date(json['createDate'])),
         'lastUpdateDate': json['lastUpdateDate'] == null ? undefined : (new Date(json['lastUpdateDate'])),
-        'name': json['name'] == null ? undefined : json['name'],
-        'amount': json['amount'] == null ? undefined : json['amount'],
+        'name': json['name'],
+        'amount': json['amount'],
+        'currency': json['currency'],
         'reserved': json['reserved'] == null ? undefined : json['reserved'],
-        'priority': json['priority'] == null ? undefined : json['priority'],
+        'priority': json['priority'],
         'priorityName': json['priorityName'] == null ? undefined : json['priorityName'],
-        'currency': json['currency'] == null ? undefined : json['currency'],
         'description': json['description'] == null ? undefined : json['description'],
         'linkToSite': json['linkToSite'] == null ? undefined : json['linkToSite'],
         'image': json['image'] == null ? undefined : json['image'],
@@ -141,10 +145,10 @@ export function ItemUpdateToJSONTyped(value?: ItemUpdate | null, ignoreDiscrimin
         'lastUpdateDate': value['lastUpdateDate'] == null ? value['lastUpdateDate'] : value['lastUpdateDate'].toISOString(),
         'name': value['name'],
         'amount': value['amount'],
+        'currency': value['currency'],
         'reserved': value['reserved'],
         'priority': value['priority'],
         'priorityName': value['priorityName'],
-        'currency': value['currency'],
         'description': value['description'],
         'linkToSite': value['linkToSite'],
         'image': value['image'],

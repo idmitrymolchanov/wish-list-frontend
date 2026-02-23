@@ -1,22 +1,15 @@
 import {useEffect, useState} from "react";
 import {BrowserRouter as Router, Route, Routes, useNavigate, useParams} from "react-router-dom";
-import {Configuration} from "./api";
-import {ItemsApi} from "./api/apis/ItemsApi";
-import type {GetItems200Response, ItemBaseInfo} from "./api/models";
+import type {GetItems200Response, ItemBaseInfo, SortField} from "./api/models";
 import AddItemForm from "./components/AddItemForm";
 import ItemList from "./components/ItemList";
 import {ItemDetailPage} from "./components/ItemDetailForm.tsx";
 import RegisterForm from "./components/RegisterForm.tsx";
 import LoginForm from "./components/LoginForm.tsx";
 import ProjectInfoPage from "./components/ProjectInfoPage.tsx";
+import {ItemEditPage} from "./components/EditItemForm.tsx";
 
-const api = new ItemsApi(
-    new Configuration({
-        // basePath: "http://94.158.218.136:8085",
-        basePath: "http://localhost:8085",
-        accessToken: async () => localStorage.getItem("token") || "",
-    })
-);
+import { api } from "./api/client";
 
 function WishListPage() {
     const {currentLogin} = useParams<{ currentLogin: string }>();
@@ -24,6 +17,7 @@ function WishListPage() {
 
     const [items, setItems] = useState<ItemBaseInfo[]>([]);
     const [status, setStatus] = useState<string | null>(null);
+    const [sort, setSort] = useState<SortField | undefined>(undefined);
 
     const [login, setLogin] = useState<string | null>(
         localStorage.getItem("login")
@@ -49,13 +43,14 @@ function WishListPage() {
         setLogin(null);
     };
 
-    const loadItems = async (status?: string | null, loginLocal?: string | null) => {
+    const loadItems = async (status?: string | null, loginLocal?: string | null, sort?: SortField | undefined) => {
         console.log(loginLocal)
         try {
             const response: GetItems200Response = await api.getItems({
                 userLogin: currentLogin ?? "undefined",
                 statusCode: status ?? "OPEN",
-                showReservedStatus: login != currentLogin && isAuthenticated
+                showReservedStatus: login != currentLogin && isAuthenticated,
+                sortField: sort
             });
             setItems(response.list ?? []);
         } catch (err) {
@@ -165,6 +160,22 @@ function WishListPage() {
                     ))}
                 </div>
 
+                <div className="sort-container">
+                    <select
+                        value={sort ?? ""}
+                        onChange={(e) => {
+                            const value = e.target.value as SortField | undefined;
+                            setSort(value);
+                            void loadItems(status, login, value);
+                        }}
+                        className="app-input full-width"
+                    >
+                        <option value="CREATE_DATE">Sort by date</option>
+                        <option value="PRIORITY">Sort by priority</option>
+                        <option value="AMOUNT">Sort by amount</option>
+                    </select>
+                </div>
+
                 <ItemList items={items} onItemClick={handleItemClick}/>
             </div>
         </div>
@@ -224,6 +235,7 @@ export default function App() {
                     <Route path="/item/:id" element={<ItemDetailPage/>}/>
                     <Route path="/items/:currentLogin" element={<WishListPage/>}/>
                     <Route path="/info" element={<ProjectInfoPage/>}/>
+                    <Route path="/item/:id/edit" element={<ItemEditPage/>}/>
                 </Routes>
             </div>
         </Router>

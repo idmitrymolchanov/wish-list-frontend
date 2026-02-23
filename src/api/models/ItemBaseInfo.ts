@@ -42,13 +42,19 @@ export interface ItemBaseInfo {
      * @type {string}
      * @memberof ItemBaseInfo
      */
-    name?: string;
+    name: string;
     /**
      * сумма
+     * @type {number}
+     * @memberof ItemBaseInfo
+     */
+    amount: number;
+    /**
+     * валюта
      * @type {string}
      * @memberof ItemBaseInfo
      */
-    amount?: string;
+    currency: string;
     /**
      * зарезервирован ли товар
      * @type {boolean}
@@ -60,7 +66,7 @@ export interface ItemBaseInfo {
      * @type {number}
      * @memberof ItemBaseInfo
      */
-    priority?: number;
+    priority: number;
     /**
      * наименование приоритета
      * @type {string}
@@ -73,6 +79,10 @@ export interface ItemBaseInfo {
  * Check if a given object implements the ItemBaseInfo interface.
  */
 export function instanceOfItemBaseInfo(value: object): value is ItemBaseInfo {
+    if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('amount' in value) || value['amount'] === undefined) return false;
+    if (!('currency' in value) || value['currency'] === undefined) return false;
+    if (!('priority' in value) || value['priority'] === undefined) return false;
     return true;
 }
 
@@ -89,10 +99,11 @@ export function ItemBaseInfoFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'] == null ? undefined : json['id'],
         'createDate': json['createDate'] == null ? undefined : (new Date(json['createDate'])),
         'lastUpdateDate': json['lastUpdateDate'] == null ? undefined : (new Date(json['lastUpdateDate'])),
-        'name': json['name'] == null ? undefined : json['name'],
-        'amount': json['amount'] == null ? undefined : json['amount'],
+        'name': json['name'],
+        'amount': json['amount'],
+        'currency': json['currency'],
         'reserved': json['reserved'] == null ? undefined : json['reserved'],
-        'priority': json['priority'] == null ? undefined : json['priority'],
+        'priority': json['priority'],
         'priorityName': json['priorityName'] == null ? undefined : json['priorityName'],
     };
 }
@@ -113,6 +124,7 @@ export function ItemBaseInfoToJSONTyped(value?: ItemBaseInfo | null, ignoreDiscr
         'lastUpdateDate': value['lastUpdateDate'] == null ? value['lastUpdateDate'] : value['lastUpdateDate'].toISOString(),
         'name': value['name'],
         'amount': value['amount'],
+        'currency': value['currency'],
         'reserved': value['reserved'],
         'priority': value['priority'],
         'priorityName': value['priorityName'],

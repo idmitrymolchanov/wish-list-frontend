@@ -41,6 +41,10 @@ export interface CreateItemRequest {
     item?: Item;
 }
 
+export interface DeleteItemRequest {
+    id: string;
+}
+
 export interface GetItemByIdRequest {
     id: string;
 }
@@ -124,6 +128,52 @@ export class ItemsApi extends runtime.BaseAPI {
     async createItem(requestParameters: CreateItemRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<CreateItem200Response> {
         const response = await this.createItemRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     * Метод для удаления предмета
+     * Удалить предмет
+     */
+    async deleteItemRaw(requestParameters: DeleteItemRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling deleteItem().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.accessToken) {
+            const token = this.configuration.accessToken;
+            const tokenString = await token("Authorization", []);
+
+            if (tokenString) {
+                headerParameters["Authorization"] = `Bearer ${tokenString}`;
+            }
+        }
+
+        let urlPath = `/wishlist/item/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * Метод для удаления предмета
+     * Удалить предмет
+     */
+    async deleteItem(requestParameters: DeleteItemRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.deleteItemRaw(requestParameters, initOverrides);
     }
 
     /**

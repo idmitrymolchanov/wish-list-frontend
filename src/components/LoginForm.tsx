@@ -1,9 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-
-// const API_BASE = "http://94.158.218.136:8085/api/auth";
-const API_BASE = "http://localhost:8085/api/auth";
+import {API_URL} from "../api/client.ts";
 
 export default function LoginForm() {
     const [login, setLogin] = useState("");
@@ -16,7 +14,7 @@ export default function LoginForm() {
         setError(null);
 
         try {
-            const response = await axios.post<string>(`${API_BASE}/login`, {
+            const response = await axios.post<string>(`${API_URL}/api/auth/login`, {
                 login,
                 password,
             });

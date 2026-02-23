@@ -19,7 +19,8 @@
  */
 export const SortField = {
     CreateDate: 'CREATE_DATE',
-    Priority: 'PRIORITY'
+    Priority: 'PRIORITY',
+    Amount: 'AMOUNT'
 } as const;
 export type SortField = typeof SortField[keyof typeof SortField];
 

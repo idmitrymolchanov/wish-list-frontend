@@ -17,7 +17,7 @@ export default function ItemList({ items, onItemClick }: Props) {
                     className={`item-card ${item.reserved ? "reserved" : ""}`}
                 >
                     <div>
-                        <strong>{item.name}</strong> — {item.amount}
+                        <strong>{item.name}</strong> — {item.amount} {item.currency}
                         <br />
                         <small>
                             {item.createDate

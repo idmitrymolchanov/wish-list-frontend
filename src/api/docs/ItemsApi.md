@@ -5,6 +5,7 @@ All URIs are relative to *https://todo/newgor-wishlist*
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
 | [**createItem**](ItemsApi.md#createitem) | **POST** /wishlist/item | Создать новый предмет |
+| [**deleteItem**](ItemsApi.md#deleteitem) | **DELETE** /wishlist/item/{id} | Удалить предмет |
 | [**getItemById**](ItemsApi.md#getitembyid) | **GET** /wishlist/item/{id} | Получить предмет вишлиста по id |
 | [**getItemImage**](ItemsApi.md#getitemimage) | **GET** /wishlist/item/{id}/image | Получить изображение предмета |
 | [**getItems**](ItemsApi.md#getitems) | **GET** /wishlist/item | Получить список предметов |
@@ -82,6 +83,80 @@ example().catch(console.error);
 | **200** | OK |  -  |
 | **400** | - Bad Request,   code: 00001,   message: Некорректный запрос  |  -  |
 | **409** | - code: 00003   message: При выполнении операции произошел сбой. Для уточнения деталей ошибки необходимо выполнить анализ логов  |  -  |
+| **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |
+
+[[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
+
+
+## deleteItem
+
+> deleteItem(id)
+
+Удалить предмет
+
+Метод для удаления предмета
+
+### Example
+
+```ts
+import {
+  Configuration,
+  ItemsApi,
+} from '';
+import type { DeleteItemRequest } from '';
+
+async function example() {
+  console.log("🚀 Testing  SDK...");
+  const config = new Configuration({ 
+    // Configure HTTP bearer authorization: Authorization
+    accessToken: "YOUR BEARER TOKEN",
+  });
+  const api = new ItemsApi(config);
+
+  const body = {
+    // string | Идентификатор предмета
+    id: 38400000-8cf0-11bd-b23e-10b96e4ef00d,
+  } satisfies DeleteItemRequest;
+
+  try {
+    const data = await api.deleteItem(body);
+    console.log(data);
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+// Run the test
+example().catch(console.error);
+```
+
+### Parameters
+
+
+| Name | Type | Description  | Notes |
+|------------- | ------------- | ------------- | -------------|
+| **id** | `string` | Идентификатор предмета | [Defaults to `undefined`] |
+
+### Return type
+
+`void` (Empty response body)
+
+### Authorization
+
+[Authorization](../README.md#Authorization)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **204** | No Content |  -  |
+| **400** | - Bad Request,   code: 00001,   message: Некорректный запрос  |  -  |
+| **404** | - Not Found,   code: 14001,   message: Предмет не найден  |  -  |
 | **500** | - code: 00005   message: Внутренняя ошибка сервера  |  -  |
 
 [[Back to top]](#) [[Back to API list]](../README.md#api-endpoints) [[Back to Model list]](../README.md#models) [[Back to README]](../README.md)
@@ -298,7 +373,7 @@ example().catch(console.error);
 | **limit** | `number` | Количество записей на странице | [Optional] [Defaults to `50`] |
 | **offset** | `number` | Смещение от начала списка | [Optional] [Defaults to `0`] |
 | **showReservedStatus** | `boolean` | показывать резерв | [Optional] [Defaults to `undefined`] |
-| **sortField** | `SortField` | показывать резерв | [Optional] [Defaults to `undefined`] [Enum: CREATE_DATE, PRIORITY] |
+| **sortField** | `SortField` | показывать резерв | [Optional] [Defaults to `undefined`] [Enum: CREATE_DATE, PRIORITY, AMOUNT] |
 
 ### Return type
 

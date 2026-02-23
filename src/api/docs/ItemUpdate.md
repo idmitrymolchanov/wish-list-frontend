@@ -10,11 +10,11 @@ Name | Type
 `createDate` | Date
 `lastUpdateDate` | Date
 `name` | string
-`amount` | string
+`amount` | number
+`currency` | string
 `reserved` | boolean
 `priority` | string
 `priorityName` | string
-`currency` | string
 `description` | string
 `linkToSite` | string
 `image` | string
@@ -31,10 +31,10 @@ const example = {
   "lastUpdateDate": null,
   "name": null,
   "amount": null,
+  "currency": null,
   "reserved": null,
   "priority": null,
   "priorityName": null,
-  "currency": null,
   "description": null,
   "linkToSite": null,
   "image": null,

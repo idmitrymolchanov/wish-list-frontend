@@ -28,6 +28,11 @@
     box-shadow: 0 0 0 2px var(--button-border);
 }
 
+.app-input.full-width {
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
 /* ===== ERROR ===== */
 
 .form-error {

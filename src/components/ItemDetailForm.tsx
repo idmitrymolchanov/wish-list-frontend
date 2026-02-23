@@ -1,14 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { Configuration, type Item, ItemsApi } from "../api";
-
-const api = new ItemsApi(
-    new Configuration({
-        // basePath: "http://94.158.218.136:8085",
-        basePath: "http://localhost:8085",
-        accessToken: async () => localStorage.getItem("token") || "",
-    })
-);
+import { type Item } from "../api";
+import { api } from "../api/client";
 
 export function ItemDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -147,7 +140,7 @@ export function ItemDetailPage() {
                     RESET
                 </button>
 
-                {item.userLogin == login && (
+                {item.userLogin === login && (
                     <button
                         onClick={async () => {
                             if (!item?.id) return;
@@ -155,22 +148,25 @@ export function ItemDetailPage() {
                                 alert("Нужно авторизоваться!");
                                 return;
                             }
-                            if (!(item.userLogin == login)) {
-                                alert("Лол, это же не твой товар! Нельзя");
-                                return;
-                            }
+
+                            const newStatus =
+                                item.statusCode === "OPEN" ? "COMPLETED" : "OPEN";
+
                             try {
-                                await api.setItemStatus({id: item.id, statusCode: "COMPLETED"});
-                                alert("Предмет выполнен!");
-                                setItem({...item, reserved: true});
+                                await api.setItemStatus({ id: item.id, statusCode: newStatus });
+                                alert(`Статус обновлён: ${newStatus}`);
+                                setItem({ ...item, statusCode: newStatus });
                             } catch (err) {
-                                console.error("Ошибка при завершении:", err);
+                                console.error("Ошибка при обновлении статуса:", err);
+                                alert("Ошибка при обновлении статуса");
                             }
                         }}
-                        className="app-button-status-filter">
-                        COMPLETE
+                        className="app-button-status-filter"
+                    >
+                        {item.statusCode === "OPEN" ? "COMPLETE" : "OPEN"}
                     </button>
                 )}
+
 
                 {item.userLogin == login && (
                     <button
@@ -218,10 +214,10 @@ export function ItemDetailPage() {
                                 alert("Изображение обновлено!");
                             } catch (err) {
                                 console.error("Ошибка загрузки изображения:", err);
-                            alert("Ошибка загрузки изображения: максимальный размер файла - 140KB");
-                        }
-                    }}
-                />
+                                alert("Ошибка загрузки изображения: максимальный размер файла - 140KB");
+                            }
+                        }}
+                    />
                 )}
 
                 {/* Изображение */}
@@ -235,12 +231,46 @@ export function ItemDetailPage() {
                 )}
             </div>
 
+            {item.userLogin == login && (
+                <button
+                    onClick={() => navigate(`/item/${id}/edit`, {state: {item}})}
+                    className="app-button full-width">
+                    edit ✎
+                </button>
+            )}
+
+            {item.userLogin === login && (
+                <button
+                    onClick={async () => {
+                        if (!item?.id) return;
+
+                        if (!isAuthenticated) {
+                            alert("Нужно авторизоваться!");
+                            return;
+                        }
+
+                        const confirmed = window.confirm("Удалить предмет?");
+                        if (!confirmed) return;
+
+                        try {
+                            await api.deleteItem({ id: item.id });
+                            navigate(`/items/${item.userLogin}`);
+                        } catch (err) {
+                            console.error("Ошибка при удалении:", err);
+                            alert("Ошибка при удалении");
+                        }
+                    }}
+                    className="app-button full-width"
+                >
+                    delete ⨂
+                </button>
+            )}
+
             <button
-                onClick={() => navigate(-1)}
+                onClick={() => navigate(`/items/${item.userLogin}`)}
                 className="app-button full-width">
                 back ←
             </button>
         </div>
-
     );
 }

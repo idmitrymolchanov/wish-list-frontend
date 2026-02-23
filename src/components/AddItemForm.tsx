@@ -10,7 +10,7 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
     const [form, setForm] = useState({
         name: "",
         description: "",
-        amount: "0.00",
+        amount: 0.00,
         currency: "RUB",
         linkToSite: "",
         priority: 0,
@@ -41,7 +41,7 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
 
         try {
             await api.createItem({ item });
-            setForm({name: "", description: "", amount: "0.00", currency: "RUB", linkToSite: "", priority: 0});
+            setForm({name: "", description: "", amount: 0.00, currency: "RUB", linkToSite: "", priority: 0});
             onItemAdded();
         } catch (err) {
             console.error("Ошибка при добавлении предмета:", err);
@@ -92,13 +92,13 @@ export default function AddItemForm({ onItemAdded, api }: Props) {
             />
 
             <div className="form-group">
-                <label htmlFor="priority">Priority (enter from 0 to 10):  </label>
+                <label htmlFor="priority">Priority:  </label>
                 <input
                     id="priority"
                     name="priority"
                     value={form.priority}
                     onChange={handleChange}
-                    placeholder="1 - 10"
+                    placeholder="0 - 10"
                     className="app-input"
                     type="number"
                     min={0}
